@@ -1,0 +1,48 @@
+import java.io.*;
+import java.util.*;
+public class studentGrades {
+    public static void main(String[] args) throws IOException {
+        Scanner inFile = new Scanner(new FileReader ("input.txt"));
+
+        //displays names, SSNs, averages(in progress)
+        while(inFile.hasNext()){
+            identify(inFile);
+
+        }
+
+        inFile.close();
+    }
+    public static void identify(Scanner inFile){
+        //creates categories, contains items inside by cycling horizontally
+            String name = inFile.next();
+            String SSN = inFile.next();
+            double grade1 = inFile.nextDouble();
+            double grade2 = inFile.nextDouble();
+            double grade3 = inFile.nextDouble();
+            double grade4 = inFile.nextDouble();
+
+
+            //calculates the average, drops offs excess decimals - fix average to align with project rules
+        double average = Math.round(((double)grade1 + grade2 + grade3 + grade4) / 4);
+
+        //format using printf - worry about later
+        //print SSN in specific format, ex. 111-11-1111
+
+        char grade = ' ';
+
+        if(average <= 100 && average >= 90 ) {
+             grade = 'A';
+        } else if (average <= 90 && average >= 80) {
+             grade = 'B';
+        } else if (average <= 80 && average >= 70) {
+             grade = 'C';
+        }else if (average <= 70 && average >= 60) {
+             grade = 'D';
+        } else if (average <= 60 && average >= 50) {
+             grade = 'F';
+        }
+
+        System.out.println(name + " " + SSN + " " + average + " " + grade);
+
+        }
+}
