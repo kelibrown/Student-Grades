@@ -5,83 +5,116 @@ public class studentGrades {
         //gives access to reading data in input.txt
         Scanner inFile = new Scanner(new FileReader ("input.txt"));
 
-        //headers
-        System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "NAME", "SSNUMBER", "AVERAGE", "GRADE", "DISTINCTION", "RANGE");
-        System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "----", "--------", "-------", "-----", "-----------", "-----");
+        displayHeader();
 
         //displays names, SSNs, averages(in progress)
         while(inFile.hasNext()){
-            identify(inFile);
+            String name = inFile.next();
+            String SSN = inFile.next();
+            double score1 = inFile.nextDouble();
+            double score2 = inFile.nextDouble();
+            double score3 = inFile.nextDouble();
+            double score4 = inFile.nextDouble();
 
+            processStudent(name, SSN, score1, score2, score3, score4);
         }
 
         inFile.close();
     }
-    public static void identify(Scanner inFile){
-        //creates categories, contains items inside by cycling horizontally
-        String name = inFile.next();
-        String SSN = inFile.next();
-        double score1 = inFile.nextDouble();
-        double score2 = inFile.nextDouble();
-        double score3 = inFile.nextDouble();
-        double score4 = inFile.nextDouble();
+        public static void displayHeader(){
+            //headers
+            System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "NAME", "SSNUMBER", "AVERAGE", "GRADE", "DISTINCTION", "RANGE");
+            System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "----", "--------", "-------", "-----", "-----------", "-----");
 
-        //weighted individual scores, updated to round each score to only 1 decimal point to avoid error
-        double score1w = Math.round(score1 * 0.2 * 10.0 ) / 10.0;
-        double score2w = Math.round(score2 * 0.2 * 10.0 ) / 10.0;
-        double score3w = Math.round(score3 * 0.2 * 10.0 ) / 10.0;
-        double score4w = Math.round(score4 * 0.4 * 10.0 ) / 10.0;
-
-        //calculates the average, drops offs excess decimals
-        double average = Math.round((score1w + score2w + score3w + score4w) * 10.0) /10.0;
-
-        //format using printf - worry about later
-        //print SSN in specific format, ex. 111-11-1111
-
-        char grade = ' ';
-
-        //averages
-        if(average <= 100 && average >= 90 ) {
-            grade = 'A';
-        } else if (average <= 90 && average >= 80) {
-            grade = 'B';
-        } else if (average <= 80 && average >= 70) {
-            grade = 'C';
-        }else if (average <= 70 && average >= 60) {
-            grade = 'D';
-        } else if (average <= 60 && average >= 50) {
-            grade = 'F';
         }
-
-        //distinction
-        String distinction = " ";
-        if(score1 > 85 && score2 > 85 && score3 > 85 && score4 > 85 && average > 90) {
-            distinction = "Yes";
-        } else {
-            distinction = "No";
-        }
-
-        //range
-        double max1 = Math.max(score1, score2);
-        double max2 = Math.max(score3, score4);
-        double highestScore = Math.max(max1, max2);
-
-        double min1 = Math.min(score1, score2);
-        double min2 = Math.min(score3, score4);
-        double lowestScore = Math.min(min1, min2);
-
-        double range = highestScore - lowestScore;
-
-        range = Math.round(range * 10.0) / 10.0;
-
-        //System.out.println("Weighted scores: " + score1w + ", " + score2w + ", " + score3w + ", " + score4w);
-
-        String SSN1 = "" + SSN.charAt(0) + SSN.charAt(1) + SSN.charAt(2);
-        String SSN2 = "" + SSN.charAt(3) + SSN.charAt(4);
-        String SSN3 = "" + SSN.charAt(5) + SSN.charAt(6) + SSN.charAt(7) + SSN.charAt(8);
-
-        String SSNFormat = SSN1 + "-" + "-" + SSN2 + "-" + SSN3;
+    public static void processStudent(String name, String SSN, double score1, double score2, double score3, double score4) {
+        double average = weightedAvg(score1, score2, score3, score4);
+        char grade = gradeLetters(average);
+        String distinction = distinctionTest(score1, score2, score3, score4, average);
+        double range = rangeCalculation(score1, score2, score3, score4);
+        String SSNFormat = SSNconcatenator(SSN);
 
         System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", name, SSNFormat, average, grade, distinction, range);
 
+
     }
+
+        public static double weightedAvg(double score1, double score2, double score3, double score4) {
+            //weighted individual scores, updated to round each score to only 1 decimal point to avoid error
+            double score1w = Math.round(score1 * 0.2 * 10.0) / 10.0;
+            double score2w = Math.round(score2 * 0.2 * 10.0) / 10.0;
+            double score3w = Math.round(score3 * 0.2 * 10.0) / 10.0;
+            double score4w = Math.round(score4 * 0.4 * 10.0) / 10.0;
+
+            double average = score1w + score2w + score3w + score4w;
+
+            //calculates the average, drops offs excess decimals
+            return Math.round(average * 10.0) / 10.0;
+
+        }
+
+    //tests conditionals to assign the appropriate letter grade to grade average (average)
+        public static char gradeLetters(double average) {
+            char grade = ' ';
+
+            //averages conditionals
+            if (average <= 100 && average >= 90) {
+                return 'A';
+            } else if (average <= 90 && average >= 80) {
+               return 'B';
+            } else if (average <= 80 && average >= 70) {
+                return 'C';
+            } else if (average <= 70 && average >= 60) {
+                return 'D';
+            } else {
+                return 'F';
+            }
+        }
+
+        //comment tbd - edit
+        public static String distinctionTest(double score1, double score2, double score3, double score4, double average) {
+            //distinction
+            String distinction = " ";
+            if (score1 > 85 && score2 > 85 && score3 > 85 && score4 > 85 && average > 90) {
+                distinction = "Yes";
+            } else {
+                return "No";
+            }
+            return distinction;
+        }
+
+            //calculates the range of student's scores by subtracting their least score by their highest
+            public static double rangeCalculation(double score1, double score2, double score3, double score4) {
+                //range
+
+                /*tests for the largest out of 2 scores at a time and stores (max1, max2)
+                compares the greatest out of the two tests to see which is the maximum number - highest score - and stores */
+                double max1 = Math.max(score1, score2);
+                double max2 = Math.max(score3, score4);
+                double highestScore = Math.max(max1, max2);
+
+                /*tests the smallest out of 2 scores at a time and stores (min1, min2)
+                compares the least out of the two tests to see which is the minimum number - lowest score - and stores */
+                double min1 = Math.min(score1, score2);
+                double min2 = Math.min(score3, score4);
+                double lowestScore = Math.min(min1, min2);
+
+                //subtracts the lowest score from highest to find the range
+                double range = highestScore - lowestScore;
+
+                return Math.round(range * 10.0) / 10.0;
+            }
+
+
+            public static String SSNconcatenator (String SSN){
+                //System.out.println("Weighted scores: " + score1w + ", " + score2w + ", " + score3w + ", " + score4w);
+
+                String SSN1 = "" + SSN.charAt(0) + SSN.charAt(1) + SSN.charAt(2);
+                String SSN2 = "" + SSN.charAt(3) + SSN.charAt(4);
+                String SSN3 = "" + SSN.charAt(5) + SSN.charAt(6) + SSN.charAt(7) + SSN.charAt(8);
+
+                return SSN1 + "-" + SSN2 + "-" + SSN3;
+            }
+
+
+}
