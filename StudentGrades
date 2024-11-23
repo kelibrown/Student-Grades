@@ -2,8 +2,12 @@ import java.io.*;
 import java.util.*;
 public class studentGrades {
     public static void main(String[] args) throws IOException {
+        //gives access to reading data in input.txt
         Scanner inFile = new Scanner(new FileReader ("input.txt"));
-        System.out.printf("%-12s %-10s %-10s %-10s %-15s %-10s %n", "NAME", "SSNUMBER", "AVERAGE", "GRADE", "DISTINCTION", "RANGE");
+
+        //headers
+        System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "NAME", "SSNUMBER", "AVERAGE", "GRADE", "DISTINCTION", "RANGE");
+        System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "----", "--------", "-------", "-----", "-----------", "-----");
 
         //displays names, SSNs, averages(in progress)
         while(inFile.hasNext()){
@@ -72,7 +76,12 @@ public class studentGrades {
 
         //System.out.println("Weighted scores: " + score1w + ", " + score2w + ", " + score3w + ", " + score4w);
 
-        System.out.printf("%-12s %-10s %-10s %-10s %-15s %-10s %n", name, SSN, average, grade, distinction, range);
+        String SSN1 = "" + SSN.charAt(0) + SSN.charAt(1) + SSN.charAt(2);
+        String SSN2 = "" + SSN.charAt(3) + SSN.charAt(4);
+        String SSN3 = "" + SSN.charAt(5) + SSN.charAt(6) + SSN.charAt(7) + SSN.charAt(8);
+
+        String SSNFormat = SSN1 + "-" + "-" + SSN2 + "-" + SSN3;
+
+        System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", name, SSNFormat, average, grade, distinction, range);
 
     }
-}
