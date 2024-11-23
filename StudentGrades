@@ -1,13 +1,16 @@
+//allows for data from input.txt to be read in program
 import java.io.*;
+//allows us the use of scanners
 import java.util.*;
 public class studentGrades {
     public static void main(String[] args) throws IOException {
         //gives access to reading data in input.txt
         Scanner inFile = new Scanner(new FileReader ("input.txt"));
 
+        //displays header
         displayHeader();
 
-        //displays names, SSNs, averages(in progress)
+        //loops through the file to read all its contents. cycles horizontally to store names, SSNs, and scores
         while(inFile.hasNext()){
             String name = inFile.next();
             String SSN = inFile.next();
@@ -16,39 +19,53 @@ public class studentGrades {
             double score3 = inFile.nextDouble();
             double score4 = inFile.nextDouble();
 
+            //displays processed information
             processStudent(name, SSN, score1, score2, score3, score4);
         }
 
+        //closes reading for file
         inFile.close();
     }
         public static void displayHeader(){
             //headers
+            System.out.println("""
+                *****************************************************
+                *  Kelise Brown, University of Bridgeport           *
+                *  Program: Student Grades                          *
+                *  Date: November 22, 2024                          *
+                *****************************************************
+                """);
+
             System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "NAME", "SSNUMBER", "AVERAGE", "GRADE", "DISTINCTION", "RANGE");
             System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", "----", "--------", "-------", "-----", "-----------", "-----");
 
         }
     public static void processStudent(String name, String SSN, double score1, double score2, double score3, double score4) {
+        //assigns objects to variables to be accessed
         double average = weightedAvg(score1, score2, score3, score4);
         char grade = gradeLetters(average);
         String distinction = distinctionTest(score1, score2, score3, score4, average);
         double range = rangeCalculation(score1, score2, score3, score4);
         String SSNFormat = SSNconcatenator(SSN);
 
+        //prints out what's stored in variables, uses printf to format
         System.out.printf("%-12s %-15s %-10s %-10s %-15s %-10s %n", name, SSNFormat, average, grade, distinction, range);
 
 
     }
 
         public static double weightedAvg(double score1, double score2, double score3, double score4) {
-            //weighted individual scores, updated to round each score to only 1 decimal point to avoid error
-            double score1w = Math.round(score1 * 0.2 * 10.0) / 10.0;
-            double score2w = Math.round(score2 * 0.2 * 10.0) / 10.0;
-            double score3w = Math.round(score3 * 0.2 * 10.0) / 10.0;
-            double score4w = Math.round(score4 * 0.4 * 10.0) / 10.0;
+            /*weighted individual scores, 1st 3 are weighted 20%, 4th is waited 40%
+            updated to round each score to only 1 decimal point to avoid error*/
+            double score1w = (score1 * 0.2 * 10.0) / 10.0;
+            double score2w = (score2 * 0.2 * 10.0) / 10.0;
+            double score3w = (score3 * 0.2 * 10.0) / 10.0;
+            double score4w = (score4 * 0.4 * 10.0) / 10.0;
 
+            //adds scores together
             double average = score1w + score2w + score3w + score4w;
 
-            //calculates the average, drops offs excess decimals
+            //calculates the average, drops offs excess decimals - not stored with average variable because of rounding errors
             return Math.round(average * 10.0) / 10.0;
 
         }
@@ -71,9 +88,10 @@ public class studentGrades {
             }
         }
 
-        //comment tbd - edit
+        //determine whether student's grade has distinction
         public static String distinctionTest(double score1, double score2, double score3, double score4, double average) {
-            //distinction
+            /*is each of your scores above 85? do you have a grade average of 90?
+            then you have distinction!*/
             String distinction = " ";
             if (score1 > 85 && score2 > 85 && score3 > 85 && score4 > 85 && average > 90) {
                 distinction = "Yes";
@@ -107,7 +125,8 @@ public class studentGrades {
 
 
             public static String SSNconcatenator (String SSN){
-                //System.out.println("Weighted scores: " + score1w + ", " + score2w + ", " + score3w + ", " + score4w);
+                /*takes the first 3, second 2, and last 3 characters and assigned to a string to be concatenated together
+                with dashes to be formatted in social security number format*/
 
                 String SSN1 = "" + SSN.charAt(0) + SSN.charAt(1) + SSN.charAt(2);
                 String SSN2 = "" + SSN.charAt(3) + SSN.charAt(4);
